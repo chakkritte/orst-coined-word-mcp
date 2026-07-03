@@ -1,0 +1,14 @@
+{
+  "name": "orst-coined-word-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for the Royal Society of Thailand coined-word (ศัพท์บัญญัติ) lookup site",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "orst-coined-word-mcp": "./index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "cheerio": "^1.0.0"
+  }
+}
