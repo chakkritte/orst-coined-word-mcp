@@ -44,23 +44,54 @@ data actually came back in. If either tool returns something unhelpful, open Dev
 Network on the site, trigger that action, copy the **Response** tab content, and I can
 tighten the parser in a minute.
 
-## Install
+## Step-by-step install
+
+### 1. Clone this repository
 
 ```bash
+git clone https://github.com/chakkritt/orst-coined-word-mcp.git
 cd orst-coined-word-mcp
+```
+
+### 2. Install Node.js dependencies
+
+Make sure you have Node.js installed (this project targets the active LTS version).
+
+```bash
 npm install
 ```
 
-## Register with Claude Code
+This installs the runtime dependencies needed to call the Royal Society website's
+internal endpoints and return the results as MCP tool responses.
 
-From this directory:
+### 3. (Optional) Test the server by hand
+
+You can quickly verify the server starts without errors:
+
+```bash
+node index.js
+```
+
+The process should stay running and wait for MCP messages. Stop it with `Ctrl+C`.
+
+### 4. Register the MCP server with Claude Code
+
+From inside the project directory, run:
 
 ```bash
 claude mcp add orst-coined-word -- node "$(pwd)/index.js"
 ```
 
-Or add it manually to your Claude Code MCP config (`~/.claude.json` or project-level
-`.mcp.json`):
+This adds the server to your Claude Code user config so it is available in every
+project.
+
+If you prefer to register it only for the current project, or you are not using the
+`claude` CLI, add it manually to one of these files instead:
+
+- User-level config: `~/.claude.json`
+- Project-level config: `.mcp.json` in the repo root
+
+Example `.mcp.json` / `~/.claude.json` entry:
 
 ```json
 {
@@ -73,16 +104,57 @@ Or add it manually to your Claude Code MCP config (`~/.claude.json` or project-l
 }
 ```
 
-Restart Claude Code (or run `/mcp` to reconnect) and the three tools should show up.
+Replace `/absolute/path/to/orst-coined-word-mcp/index.js` with the actual absolute path.
 
-## Example
+### 5. Restart Claude Code and verify
 
-Ask Claude Code something like:
+Restart Claude Code, or run `/mcp` inside Claude Code to reconnect to the MCP server.
+
+After reconnecting, Claude Code should show three new tools:
+
+- `lookup_word`
+- `search_suggestions`
+- `list_domains`
+
+You can test by asking:
 
 > Look up the Thai coined term for "computer" using orst-coined-word.
 
-It will call `lookup_word` with `{"word": "computer"}` and get back, per subject field,
-the Thai translation(s) — e.g. วิทยาศาสตร์ → คอมพิวเตอร์, คณิตกรณ์.
+## Claude Code Skill
+
+This repo also includes `SKILL.md`, a reusable Claude Code skill for Thai academic
+writing. Drop it into your skills directory (e.g. `~/.claude/skills/thai-coined-term-lookup/`)
+and Claude Code will use it automatically when you are writing Thai academic text that
+includes English technical terms.
+
+The skill guides Claude to:
+
+- Look up official Royal Society coined terms (`ศัพท์บัญญัติ`) versus transliterated loan words.
+- Choose the right term for formal theses, dissertations, journal papers, and research proposals.
+- Present results with a short table and a one-line recommendation.
+
+See [`SKILL.md`](./SKILL.md) for the full prompt and behavior.
+
+## Example usage
+
+After installing and registering the server, ask Claude Code:
+
+> Look up the Thai coined term for "computer" using orst-coined-word.
+
+Claude Code calls `lookup_word` with `{"word": "computer"}`. A typical result includes
+multiple subject-field entries, each showing the Thai translation(s) endorsed by that
+field:
+
+| Subject field | Thai translation(s) |
+|---|---|
+| วิทยาศาสตร์ | คอมพิวเตอร์, คณิตกรณ์ |
+| คณิตศาสตร์ | คอมพิวเตอร์, คณิตกรณ์ |
+| วนศาสตร์ | คอมพิวเตอร์, คณิตกรณ์ |
+
+You can then choose the appropriate form for your document. In a Thai academic thesis,
+for instance, you might write **คณิตกรณ์** on first use with the English term in
+parentheses, then use **คอมพิวเตอร์** consistently thereafter if your committee prefers
+the more common transliterated form.
 
 ## Notes / limitations
 
