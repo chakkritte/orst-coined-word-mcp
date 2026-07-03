@@ -6,6 +6,8 @@ Royal Society of Thailand (ราชบัณฑิตยสภา).
 
 **By:** Chakkrit Termritthikun
 
+[![Buy Me a Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://buymeacoffee.com/chakkritt)
+
 **Disclaimer:** This project is an **unofficial, community-built, open-source MCP**
 implementation. It is **not affiliated with, endorsed by, or supported by the Royal
 Society of Thailand**. All data belongs to the Royal Society of Thailand and is
